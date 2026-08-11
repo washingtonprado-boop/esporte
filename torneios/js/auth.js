@@ -73,9 +73,7 @@ async function logout() {
 }
 
 async function carregarPerfil(uid) {
-  console.log("[DEBUG] Buscando perfil para UID:", JSON.stringify(uid));
   const snap = await getDoc(doc(db, "usuarios", uid));
-  console.log("[DEBUG] Documento encontrado?", snap.exists());
   return snap.exists() ? { id: snap.id, ...snap.data() } : null;
 }
 
@@ -153,9 +151,12 @@ function isAdmin() {
   return currentProfile?.tipo === "admin";
 }
 
-function getTimeIdAtual() {
-  return currentProfile?.tipo === "responsavel" ? currentProfile.timeId : null;
-}
+// NOTA: não existe getTimeIdAtual() aqui de propósito. O time de um
+// responsável é sempre resolvido via buscarMeuTime(uid) em times.js,
+// que consulta times.responsavelUid — a única fonte da verdade (ver
+// comentário no topo de firestore.rules). O campo usuarios/{uid}.timeId
+// é só informativo (preenchido pelo admin ao vincular um time já
+// existente) e não deve ser usado para decidir "qual é o meu time".
 
 export {
   login,
@@ -163,7 +164,6 @@ export {
   requireAuth,
   getPerfilAtual,
   isAdmin,
-  getTimeIdAtual,
   configuracaoPendente,
   MSG_CONFIG_PENDENTE
 };
