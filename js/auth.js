@@ -73,7 +73,9 @@ async function logout() {
 }
 
 async function carregarPerfil(uid) {
+  console.log("[DEBUG] Buscando perfil para UID:", JSON.stringify(uid));
   const snap = await getDoc(doc(db, "usuarios", uid));
+  console.log("[DEBUG] Documento encontrado?", snap.exists());
   return snap.exists() ? { id: snap.id, ...snap.data() } : null;
 }
 
